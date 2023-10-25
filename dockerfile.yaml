@@ -3,7 +3,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: sd-web-cm
-  # namespace: leida-ai
+  namespace: leida-ai
 data:
   links.txt: |
     https://huggingface.co/stabilityai/sd-vae-ft-mse-original/resolve/main/vae-ft-mse-840000-ema-pruned.ckpt

@@ -5,12 +5,14 @@ data:
 kind: Secret
 metadata:
   name: dockerhub
+  namespace: leida-ai
 
 ---
 apiVersion: v1
 kind: Pod
 metadata:
   name: kaniko
+  namespace: leida-ai
 spec:
   restartPolicy: Never
   containers:
