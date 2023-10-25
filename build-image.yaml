@@ -20,13 +20,17 @@ spec:
     image: gcr.io/kaniko-project/executor:latest
     args: ["--dockerfile=/workspace/Dockerfile",
           "--context=/workspace/",
-          "--destination=docker.io/rubyroes/sd-web:v1.6"]
+          "--destination=docker.io/rubyroes/sd-web:v1.6"
+          "--cache",
+          "--cache-dir=/cache"]
     volumeMounts:
       - name: kaniko-secret
         mountPath: /kaniko/.docker
       - name: dockerfile
         mountPath: /workspace/Dockerfile
         subPath: Dockerfile
+      - name: kaniko-cache
+        mountPath: /cache
   volumes:
     - name: dockerfile
       configMap:
@@ -40,3 +44,7 @@ spec:
         items:
           - key: .dockerconfigjson
             path: config.json
+    - name: kaniko-cache
+      hostPath:
+        path: /storage/dev/soft/kaniko/cache
+        type: DirectoryOrCreate
