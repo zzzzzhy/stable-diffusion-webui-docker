@@ -75,7 +75,7 @@ spec:
       runtimeClassName: nvidia
       containers:
         - name: sd-webui
-          image: rubyroes/sd-web:v1.6 ## 自行构建
+          image: rubyroes/sd-web:v1.6.0 ## 自行构建
           imagePullPolicy: IfNotPresent
           env:
           - name: CLI_ARGS
