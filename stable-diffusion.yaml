@@ -1,0 +1,105 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sdw-models-pvc
+  namespace: leida-ai
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 200Gi
+  storageClassName: local-sc
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sdw-extensions-pvc
+  namespace: leida-ai
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: local-sc
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sdw-outputs-pvc
+  namespace: leida-ai
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 500Gi
+  storageClassName: local-sc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sdw
+  namespace: leida-ai
+spec:
+  ports:
+    - port: 7860
+      protocol: TCP
+      targetPort: http-sdw
+  selector:
+    app: sd-webui
+  sessionAffinity: None
+  type: NodePort
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sd-webui
+  namespace: leida-ai
+spec:
+  selector:
+    matchLabels:
+      app: sd-webui
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: sd-webui
+    spec:
+      runtimeClassName: nvidia
+      containers:
+        - name: sd-webui
+          image: rubyroes/sd-web:v1.6 ## 自行构建
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: CLI_ARGS
+            value: "--allow-code --medvram --xformers --enable-insecure-extension-access --api --no-download-sd-model"          
+          resources:
+            limits:
+              nvidia.com/gpu: 1
+          ports:
+            - name: http
+              containerPort: 7860
+          volumeMounts:
+          - name: models
+            mountPath: /stable-diffusion-webui/models
+          - name: extensions
+            mountPath: /stable-diffusion-webui/extensions
+          - name: outputs
+            mountPath: /stable-diffusion-webui/outputs
+      volumes:
+      - name: models
+        persistentVolumeClaim:
+          claimName: sdw-models-pvc
+      - name: extensions
+        persistentVolumeClaim:
+          claimName: sdw-extensions-pvc
+      - name: outputs
+        persistentVolumeClaim:
+          claimName: sdw-outputs-pvc

@@ -1,0 +1,40 @@
+---
+apiVersion: v1
+data:
+  .dockerconfigjson: eyJhdXRocyI6eyJodHRwczovL2luZGV4LmRvY2tlci5pby92MS8iOnsiYXV0aCI6ImNuVmllWEp2WlhNNmVucDZlbnBvZVM0d09UQTIifX19Cg==
+kind: Secret
+metadata:
+  name: dockerhub
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kaniko
+spec:
+  restartPolicy: Never
+  containers:
+  - name: kaniko
+    image: gcr.io/kaniko-project/executor:latest
+    args: ["--dockerfile=/workspace/Dockerfile",
+          "--context=/workspace/",
+          "--destination=docker.io/rubyroes/sd-web:v1.6"]
+    volumeMounts:
+      - name: kaniko-secret
+        mountPath: /kaniko/.docker
+      - name: dockerfile
+        mountPath: /workspace/Dockerfile
+        subPath: Dockerfile
+  volumes:
+    - name: dockerfile
+      configMap:
+        name: sd-web-cm
+        items:
+          - key: dockerfile
+            path: Dockerfile
+    - name: kaniko-secret
+      secret:
+        secretName: dockerhub
+        items:
+          - key: .dockerconfigjson
+            path: config.json

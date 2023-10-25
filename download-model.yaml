@@ -1,0 +1,30 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: download-models
+  namespace: leida-ai
+spec:
+  restartPolicy: Never
+  volumes:
+    - name: models
+      persistentVolumeClaim:
+        claimName: sdw-models-pvc
+    - name: links
+      configMap:
+        name: sd-web-cm
+        items:
+          - key: links.txt
+            path: links.txt
+  containers:
+    - name: download-models
+      image: alpine3.15
+      command: ["aria2c"]
+      args: ["-x", "10","--input-file","/links.txt","--dir","/stable-diffusion-webui/models","--continue"]
+      volumeMounts:
+        - name: links
+          mountPath: /links.txt
+          subPath: links.txt
+        - name: models
+          mountPath: /stable-diffusion-webui/models
+        
