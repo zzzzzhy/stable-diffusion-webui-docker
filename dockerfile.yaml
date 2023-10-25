@@ -58,7 +58,7 @@ data:
     RUN git clone https://github.com/pharmapsychotic/clip-interrogator /stable-diffusion-webui/repositories/clip-interrogator
     RUN git -C /stable-diffusion-webui/repositories/clip-interrogator checkout 2cf03aaf6e704197fd0dae7c7f96aa59cf1b11c9
 
-    RUN git clone https://github.com/pharmapsychotic/generative-models /stable-diffusion-webui/repositories/generative-models
+    RUN git clone https://github.com/Stability-AI/generative-models /stable-diffusion-webui/repositories/generative-models
     RUN git -C /stable-diffusion-webui/repositories/generative-models checkout 45c443b316737a4ab6e40413d7794a7f5657c19f
 
 
@@ -92,10 +92,7 @@ data:
       pip install -r requirements_versions.txt
 
 
-    RUN \
-      mv ${ROOT}/style.css ${ROOT}/user.css && \
-      # one of the ugliest hacks I ever wrote \
-      sed -i 's/in_app_dir = .*/in_app_dir = True/g' /usr/local/lib/python3.10/site-packages/gradio/routes.py && \
+    RUN sed -i 's/in_app_dir = .*/in_app_dir = True/g' /opt/conda/lib/python3.10/site-packages/gradio/routes.py && \
       git config --global --add safe.directory '*'
 
     WORKDIR ${ROOT}
