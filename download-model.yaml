@@ -18,7 +18,7 @@ spec:
             path: links.txt
   containers:
     - name: download-models
-      image: alpine3.15
+      image: p3terx/aria2-pro
       command: ["aria2c"]
       args: ["-x", "10","--input-file","/links.txt","--dir","/stable-diffusion-webui/models","--continue"]
       volumeMounts:

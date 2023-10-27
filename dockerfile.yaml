@@ -41,25 +41,25 @@ data:
       pip install -r requirements_versions.txt
 
 
-    ENV ROOT=/stable-diffusion-webui
+    ENV ROOT=/workspace/stable-diffusion-webui
 
-    RUN git clone https://github.com/Stability-AI/stablediffusion.git /stable-diffusion-webui/repositories/stable-diffusion-stability-ai
-    RUN git -C /stable-diffusion-webui/repositories/stable-diffusion-stability-ai checkout cf1d67a6fd5ea1aa600c4df58e5b47da45f6bdbf && rm -rf assets data/**/*.png data/**/*.jpg data/**/*.gif
+    RUN git clone https://github.com/Stability-AI/stablediffusion.git ${ROOT}/repositories/stable-diffusion-stability-ai
+    RUN git -C ${ROOT}/repositories/stable-diffusion-stability-ai checkout cf1d67a6fd5ea1aa600c4df58e5b47da45f6bdbf && rm -rf assets data/**/*.png data/**/*.jpg data/**/*.gif
 
-    RUN git clone https://github.com/sczhou/CodeFormer.git /stable-diffusion-webui/repositories/CodeFormer
-    RUN git -C /stable-diffusion-webui/repositories/CodeFormer checkout c5b4593074ba6214284d6acd5f1719b6c5d739af  && rm -rf assets inputs
+    RUN git clone https://github.com/sczhou/CodeFormer.git ${ROOT}/repositories/CodeFormer
+    RUN git -C ${ROOT}/repositories/CodeFormer checkout c5b4593074ba6214284d6acd5f1719b6c5d739af  && rm -rf assets inputs
 
-    RUN git clone https://github.com/salesforce/BLIP.git /stable-diffusion-webui/repositories/BLIP
-    RUN git -C /stable-diffusion-webui/repositories/BLIP checkout 48211a1594f1321b00f14c9f7a5b4813144b2fb9
+    RUN git clone https://github.com/salesforce/BLIP.git ${ROOT}/repositories/BLIP
+    RUN git -C ${ROOT}/repositories/BLIP checkout 48211a1594f1321b00f14c9f7a5b4813144b2fb9
 
-    RUN git clone https://github.com/crowsonkb/k-diffusion.git /stable-diffusion-webui/repositories/k-diffusion
-    RUN git -C /stable-diffusion-webui/repositories/k-diffusion checkout ab527a9a6d347f364e3d185ba6d714e22d80cb3c
+    RUN git clone https://github.com/crowsonkb/k-diffusion.git ${ROOT}/repositories/k-diffusion
+    RUN git -C ${ROOT}/repositories/k-diffusion checkout ab527a9a6d347f364e3d185ba6d714e22d80cb3c
 
-    RUN git clone https://github.com/pharmapsychotic/clip-interrogator /stable-diffusion-webui/repositories/clip-interrogator
-    RUN git -C /stable-diffusion-webui/repositories/clip-interrogator checkout 2cf03aaf6e704197fd0dae7c7f96aa59cf1b11c9
+    RUN git clone https://github.com/pharmapsychotic/clip-interrogator ${ROOT}/repositories/clip-interrogator
+    RUN git -C ${ROOT}/repositories/clip-interrogator checkout 2cf03aaf6e704197fd0dae7c7f96aa59cf1b11c9
 
-    RUN git clone https://github.com/Stability-AI/generative-models /stable-diffusion-webui/repositories/generative-models
-    RUN git -C /stable-diffusion-webui/repositories/generative-models checkout 45c443b316737a4ab6e40413d7794a7f5657c19f
+    RUN git clone https://github.com/Stability-AI/generative-models ${ROOT}/repositories/generative-models
+    RUN git -C ${ROOT}/repositories/generative-models checkout 45c443b316737a4ab6e40413d7794a7f5657c19f
 
 
     ENV INDEX_URL https://pypi.tuna.tsinghua.edu.cn/simple
@@ -92,8 +92,7 @@ data:
       pip install -r requirements_versions.txt
 
 
-    RUN sed -i 's/in_app_dir = .*/in_app_dir = True/g' /opt/conda/lib/python3.10/site-packages/gradio/routes.py && \
-      git config --global --add safe.directory '*'
+    RUN sed -i 's/in_app_dir = .*/in_app_dir = True/g' /opt/conda/lib/python3.10/site-packages/gradio/routes.py 
 
     WORKDIR ${ROOT}
     ENV NVIDIA_VISIBLE_DEVICES=all
