@@ -42,6 +42,20 @@ spec:
 
 ---
 apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sdw-nsfw-pvc
+  namespace: leida-ai
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: local-sc
+
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: sdw
@@ -88,11 +102,13 @@ spec:
               containerPort: 7860
           volumeMounts:
           - name: models
-            mountPath: /stable-diffusion-webui/models
+            mountPath: /workspace/stable-diffusion-webui/models
           - name: extensions
-            mountPath: /stable-diffusion-webui/extensions
+            mountPath: /workspace/stable-diffusion-webui/extensions
           - name: outputs
-            mountPath: /stable-diffusion-webui/outputs
+            mountPath: /workspace/stable-diffusion-webui/outputs
+          - name: nsfw
+            mountPath: /workspace/stable-diffusion-webui/CompVis/stable-diffusion-safety-checker 
       volumes:
       - name: models
         persistentVolumeClaim:
@@ -103,3 +119,6 @@ spec:
       - name: outputs
         persistentVolumeClaim:
           claimName: sdw-outputs-pvc
+      - name: nsfw
+        persistentVolumeClaim:
+          claimName: sdw-nsfw-pvc

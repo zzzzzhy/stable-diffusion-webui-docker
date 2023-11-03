@@ -20,7 +20,7 @@ spec:
     image: gcr.io/kaniko-project/executor:latest
     args: ["--dockerfile=/workspace/Dockerfile",
           "--context=/workspace/",
-          "--destination=docker.io/rubyroes/sd-web:v1.6"
+          "--destination=docker.io/rubyroes/sd-web:v1.6.2"
           "--cache",
           "--cache-dir=/cache"]
     volumeMounts:
